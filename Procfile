@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath "/src" "flaskr:create_app()"
+web: gunicorn --pythonpath "/src/flaskr" "flaskr:create_app()"
