@@ -1,1 +1,1 @@
-web: gunicorn --chdir "/src/flaskr" "flaskr:create_app()"
+web: gunicorn "src.flaskr:create_app()"
