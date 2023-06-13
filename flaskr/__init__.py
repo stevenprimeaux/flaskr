@@ -3,16 +3,19 @@
 import os
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 def create_app(test_config=None):
-    """Initialize application."""
-    from . import auth, db, blog
+    """Define application factory."""
+    from . import auth, blog
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY="dev",
-        DATABASE=os.path.join(app.instance_path, "flaskr.sqlite")
+        SECRET_KEY=os.getenv("SECRET_KEY"),
+        SQLALCHEMY_DATABASE_URI=os.getenv("SQLALCHEMY_DATABASE_URI")
     )
 
     if test_config is None:
@@ -29,10 +32,9 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     app.register_blueprint(blog.bp)
 
-    app.add_url_rule("/", endpoint="index")
+    with app.app_context():
+        db.create_all()
 
-    @app.route("/hello")
-    def hello():
-        return "Hello!"
+    app.add_url_rule("/", endpoint="index")
 
     return app
