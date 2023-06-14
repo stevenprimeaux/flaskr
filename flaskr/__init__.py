@@ -13,8 +13,10 @@ def create_app(test_config=None):
     from . import auth, blog
 
     db_string = os.getenv("DATABASE_URL")
+    print(db_string)
     if db_string is not None:
         db_string.replace("postgres://", "postgresql://", 1)
+    print(db_string)
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
