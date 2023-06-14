@@ -7,19 +7,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
-if SQLALCHEMY_DATABASE_URI is not None:
-    SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
-
 
 def create_app(test_config=None):
     """Define application factory."""
     from . import auth, blog
 
+    db_string = os.getenv("DATABASE_URL")
+    if db_string is not None:
+        db_string.replace("postgres://", "postgresql://", 1)
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY"),
-        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI
+        SQLALCHEMY_DATABASE_URI=db_string
     )
 
     if test_config is None:
