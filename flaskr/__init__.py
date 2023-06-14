@@ -8,9 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
-
-
-if SQLALCHEMY_DATABASE_URI:
+if SQLALCHEMY_DATABASE_URI is not None:
     SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
 
