@@ -71,6 +71,13 @@ def login():
     return render_template("auth/login.html")
 
 
+@bp.route("/logout")
+def logout():
+    """Clear user information."""
+    session.clear()
+    return redirect(url_for("index"))
+
+
 @bp.before_app_request
 def load_logged_in_user():
     """Fetch user information."""
@@ -82,13 +89,6 @@ def load_logged_in_user():
         g.user = db.session.execute(
             db.select(User).filter_by(id=user_id)
         ).scalar_one()
-
-
-@bp.route("/logout")
-def logout():
-    """Clear user information."""
-    session.clear()
-    return redirect(url_for("index"))
 
 
 def login_required(view):

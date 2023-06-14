@@ -18,7 +18,6 @@ def index():
     posts = db.session.execute(
         db.select(Post).order_by(Post.created.desc())
     ).scalars()
-
     return render_template("blog/index.html", posts=posts)
 
 
@@ -48,21 +47,6 @@ def create():
             return redirect(url_for("blog.index"))
 
     return render_template("blog/create.html")
-
-
-def get_post(id, check_author=True):
-    """Fetch blog post."""
-    post = db.session.execute(
-        db.select(Post).filter_by(id=id)
-    ).scalar_one_or_none()
-
-    if post is None:
-        abort(404, f"Post id {id} doesn't exit.")
-
-    if check_author and post.author_id != g.user.id:
-        abort(403)
-
-    return post
 
 
 @bp.route("/<int:id>/update", methods=["GET", "POST"])
@@ -100,3 +84,18 @@ def delete(id):
     db.session.delete(post)
     db.session.commit()
     return redirect(url_for("blog.index"))
+
+
+def get_post(id, check_author=True):
+    """Fetch blog post."""
+    post = db.session.execute(
+        db.select(Post).filter_by(id=id)
+    ).scalar_one_or_none()
+
+    if post is None:
+        abort(404, f"Post id {id} doesn't exit.")
+
+    if check_author and post.author_id != g.user.id:
+        abort(403)
+
+    return post
