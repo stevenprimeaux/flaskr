@@ -1,4 +1,3 @@
-include src/flaskr/schema.sql
 graft src/flaskr/static
 graft src/flaskr/templates
 global-exclude *.pyc
