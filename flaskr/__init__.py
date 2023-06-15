@@ -8,18 +8,30 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+def get_database_url():
+    """Return database string in format required by SQLAlchemy."""
+    database_url = os.getenv("DATABASE_URL")
+    if database_url is not None:
+        return database_url.replace(
+            "postgres://",
+            "postgresql://",
+            1
+        )
+
+
+def get_secret_key():
+    """Return secret key for session cookie."""
+    return os.getenv("SECRET_KEY")
+
+
 def create_app(test_config=None):
     """Define application factory."""
     from . import auth, blog
 
-    db_string = os.getenv("DATABASE_URL")
-    if db_string is not None:
-        db_string = db_string.replace("postgres://", "postgresql://", 1)
-
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY=os.getenv("SECRET_KEY"),
-        SQLALCHEMY_DATABASE_URI=db_string
+        SECRET_KEY=get_secret_key(),
+        SQLALCHEMY_DATABASE_URI=get_database_url()
     )
 
     if test_config is None:

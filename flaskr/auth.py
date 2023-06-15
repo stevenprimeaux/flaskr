@@ -88,7 +88,7 @@ def load_logged_in_user():
     else:
         g.user = db.session.execute(
             db.select(User).filter_by(id=user_id)
-        ).scalar_one()
+        ).scalar_one_or_none()
 
 
 def login_required(view):
